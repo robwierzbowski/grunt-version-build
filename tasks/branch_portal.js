@@ -43,7 +43,7 @@ module.exports = function (grunt) {
     // Check that requirements are met
     function checkRequirements (next) {
       // Check that required options are set. Sync function
-      ['branch', 'dir'].forEach( function (element) {
+      ['branch', 'dir', 'remote'].forEach( function (element) {
         if (!options.hasOwnProperty(element)) {
           grunt.fail.warn('The "' + element + '" option is required.');
           done(false);
