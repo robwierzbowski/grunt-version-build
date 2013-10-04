@@ -53,11 +53,19 @@ module.exports = function (grunt) {
       // Check that the target directory exists
       fs.stat(options.dir, function (err, stats) {
 
-        // TODO: make dir if it doesn't exist
-
         if (err) {
-          grunt.fail.warn('The target directory "' + options.dir + '" must exist.');
-          done(false);
+          grunt.log.writeln('The target directory "' + options.dir + '" doesn\'t exist. Creating it.');
+
+          // Create the target directory if it doesn't exist.
+          fs.mkdir(options.dir, function (err, stats) {
+            if (err) {
+              grunt.fail.warn('Unable to create the target directory "' + options.dir + '".');
+              done(false);
+              return;
+            }
+
+            next();
+          });
         }
         else {
           next();
@@ -105,7 +113,7 @@ module.exports = function (grunt) {
               grunt.fail.warn(err);
               done(false);
             }
-            grunt.log.write('Creating empty git repository in ' + options.dir);
+            grunt.log.writeln('Creating empty git repository in ' + options.dir);
             next();
           });
         }
@@ -116,7 +124,6 @@ module.exports = function (grunt) {
     }
 
     // Create the portal branch if it doesn't exist
-    // TODO: if branch is new needs a blank / initial commit
     function initBranch (next) {
       exec('git show-ref --verify --quiet refs/heads/' + options.branch, {cwd: options.dir}, function (err, stdout) {
         if (err) {
@@ -125,11 +132,21 @@ module.exports = function (grunt) {
             if (err) {
               grunt.fail.warn(err);
               done(false);
+              return;
             }
-            else {
-              grunt.log.write('Creating new "' + options.branch + '" branch');
+
+            grunt.log.writeln('Created new "' + options.branch + '" branch');
+
+            // TODO: only create the empty commit if the remote branch doesn't exist.
+            exec('git commit --allow-empty -m "Initial Commit."', {cwd: options.dir}, function (err, stdout) {
+              if (err) {
+                grunt.fail.warn(err);
+                done(false);
+                return;
+              }
+
               next();
-            }
+            });
           });
         }
         else {
@@ -172,7 +189,7 @@ module.exports = function (grunt) {
           }
           else if (stdout === '') {
             // No changes, skip commit
-            grunt.log.write('There have been no changes, skipping commit.'); //// reword
+            grunt.log.writeln('There have been no changes, skipping commit.'); //// reword
             next();
           }
           else if (stdout) {
@@ -187,8 +204,8 @@ module.exports = function (grunt) {
                 done(false);
               }
               else {
-                grunt.log.write('Committed changes to branch "' + options.branch + '".');
-                grunt.log.write(stdout);
+                grunt.log.writeln('Committed changes to branch "' + options.branch + '".');
+                grunt.log.writeln(stdout);
                 next();
               }
             });
@@ -212,8 +229,8 @@ module.exports = function (grunt) {
           done(false);
         }
         else {
-          grunt.log.write('Pushed ' + options.branch + ' to ' + options.remote);
-          grunt.log.write(stderr);
+          grunt.log.writeln('Pushed ' + options.branch + ' to ' + options.remote);
+          grunt.log.writeln(stderr);
 
           // TODO: Give good error messages:
           // - if push doesn't work because of network ?
