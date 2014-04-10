@@ -27,6 +27,7 @@ module.exports = function (grunt) {
       commit: false,
       tag: false,
       push: false,
+      force: false,
       message: 'Built %sourceName% from commit %sourceCommit% on branch %sourceBranch%',
       connectCommits: true
     });
