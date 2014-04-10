@@ -206,10 +206,17 @@ module.exports = function (grunt) {
     // Push branch to remote
     function gitPush () {
       grunt.log.subhead('Pushing ' + options.branch + ' to ' + options.remote);
-      execWrap('git push ' + remoteName + ' ' + options.branch);
+
+      var forceTag = '';
+
+      if (options.force) {
+        forceTag = ' -f '
+      }
+
+      execWrap('git push ' + forceTag + remoteName + ' ' + options.branch);
 
       if (options.tag) {
-        execWrap('git push ' + remoteName + ' ' + options.tag);
+        execWrap('git push ' + forceTag + remoteName + ' ' + options.tag);
       }
     }
 
