@@ -210,7 +210,8 @@ module.exports = function (grunt) {
       var forceTag = '';
 
       if (options.force) {
-        forceTag = ' -f '
+        forceTag = ' -f ';
+        grunt.log.subhead('Setting a force tag in push statment.');
       }
 
       execWrap('git push ' + forceTag + remoteName + ' ' + options.branch);
