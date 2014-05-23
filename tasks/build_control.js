@@ -27,6 +27,7 @@ module.exports = function (grunt) {
       commit: false,
       tag: false,
       push: false,
+      force: false,
       message: 'Built %sourceName% from commit %sourceCommit% on branch %sourceBranch%',
       connectCommits: true
     });
@@ -206,10 +207,18 @@ module.exports = function (grunt) {
     // Push branch to remote
     function gitPush () {
       grunt.log.subhead('Pushing ' + options.branch + ' to ' + options.remote);
-      execWrap('git push ' + remoteName + ' ' + options.branch);
+
+      var forceTag = '';
+
+      if (options.force) {
+        forceTag = ' -f ';
+        grunt.log.subhead('Setting a force tag in push statment.');
+      }
+
+      execWrap('git push ' + forceTag + remoteName + ' ' + options.branch);
 
       if (options.tag) {
-        execWrap('git push ' + remoteName + ' ' + options.tag);
+        execWrap('git push ' + forceTag + remoteName + ' ' + options.tag);
       }
     }
 
