@@ -153,7 +153,7 @@ grunt.initConfig({
       options: {
         remote: 'git@heroku.com:example-heroku-webapp-1988.git',
         branch: 'master',
-        tag: pkg.version
+        tag: 'pkg.version'
       }
     },
     local: {
