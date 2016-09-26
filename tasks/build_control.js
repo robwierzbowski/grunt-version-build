@@ -347,6 +347,9 @@ module.exports = function (grunt) {
       checkRequirements();
       assignTokens();
       if (options.remote === '../') verifyRepoBranchIsTracked();
+      
+      // Allow for sourceBranch token in branch name
+      options.branch = options.branch.replace(/%sourceBranch%/g, tokens.branch);
 
       // Change working directory
       shelljs.cd(options.dir);

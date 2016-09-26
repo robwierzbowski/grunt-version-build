@@ -55,6 +55,11 @@ Default: `dist`
 
 The branch to commit to.
 
+You can use the following token in the branch string.
+
+- `%sourceBranch%`: The main project's current branch
+
+This allows your commit branch to match (or contain) the name of the branch that created the compiled code.
 
 #### remote
 Type: `String`  
